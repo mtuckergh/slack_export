@@ -1,0 +1,45 @@
+#!/usr/bin/env ruby
+
+require "optparse"
+require "slack_export"
+
+options = {}
+
+optparse = OptionParser.new do |opts|
+  opts.banner = "Usage: slack_export --key=your-slack-api-key --channel=private-channel-name --path=folder-to-create-export"
+
+  opts.on("-h", "--help", "Display this screen") do
+    puts opts
+    exit
+  end
+
+  opts.on("-k", "--key KEY", "Slack API Key (required)") do |key|
+    options[:key] = key
+  end
+
+  opts.on("-c", "--channel CHANNEL", "Private Channel name (required)") do |channel|
+    options[:channel] = channel
+  end
+
+  opts.on("-p", "--path PATH", "Local folder path to write export file (required)") do |path|
+    options[:path] = path
+  end
+end
+optparse.parse!
+
+[:key, :channel, :path].each do |arg|
+  unless options[arg]
+    puts optparse.help
+    exit -1
+  end
+end
+
+exporter = SlackExport::Exporter.new(options[:key], options[:channel], options[:path])
+exporter.logger = -> (message) { puts message }
+
+begin
+  exporter.export
+rescue => e
+  puts e.message
+  exit -1
+end
