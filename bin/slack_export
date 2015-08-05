@@ -6,7 +6,7 @@ require "slack_export"
 options = {}
 
 optparse = OptionParser.new do |opts|
-  opts.banner = "Usage: slack_export --key=your-slack-api-key --channel=private-channel-name --path=folder-to-create-export"
+  opts.banner = "Usage: slack_export --key your-slack-api-key --channel private-channel-name --path folder-to-create-export"
 
   opts.on("-h", "--help", "Display this screen") do
     puts opts
@@ -17,11 +17,11 @@ optparse = OptionParser.new do |opts|
     options[:key] = key
   end
 
-  opts.on("-c", "--channel CHANNEL", "Private Channel name (required)") do |channel|
+  opts.on("-c", "--channel CHANNEL", "Private Channel name (required). ONLY Private channels are supported") do |channel|
     options[:channel] = channel
   end
 
-  opts.on("-p", "--path PATH", "Local folder path to write export file (required)") do |path|
+  opts.on("-p", "--path PATH", "Local folder path to write export file (required). Path must already exist") do |path|
     options[:path] = path
   end
 end
@@ -34,10 +34,10 @@ optparse.parse!
   end
 end
 
-exporter = SlackExport::Exporter.new(options[:key], options[:channel], options[:path])
-exporter.logger = -> (message) { puts message }
-
 begin
+  exporter = SlackExport::Exporter.new(options[:key], options[:channel], options[:path])
+  exporter.logger = -> (message) { puts message }
+
   exporter.export
 rescue => e
   puts e.message

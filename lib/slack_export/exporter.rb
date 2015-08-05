@@ -16,7 +16,7 @@ module SlackExport
     end
 
     def export
-      raise StandardError("Directory #{base_path} does not exist") unless Dir.exist?(base_path)
+      raise StandardError, "Directory #{base_path} does not exist" unless Dir.exist?(base_path)
       log "Exporting #{channel} to folder #{base_path}"
 
       # CHANNELS
