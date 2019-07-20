@@ -1,6 +1,6 @@
-require "slack_export/slack_client"
-require "json"
-require "zip"
+require 'slack_export/slack_client'
+require 'json'
+require 'zip'
 
 module SlackExport
   class Exporter
@@ -12,7 +12,7 @@ module SlackExport
       @client = SlackClient.new(api_key, channel)
       @channel = channel
       @base_path = base_path
-      self.logger = logger
+      @logger = logger || self.logger
     end
 
     def export
@@ -47,6 +47,10 @@ module SlackExport
         zip.add(channels_filename, channels_path)
         zip.add(messages_sub_path, messages_path)
       end
+
+      # cleanup
+      File.delete(users_path, messages_path, channels_path)
+      Dir.delete(messages_base_path)
     end
 
     def export_path
@@ -88,7 +92,7 @@ module SlackExport
     end
 
     def log(message)
-      logger.call message if logger
+      @logger.call message if @logger
     end
 
   end

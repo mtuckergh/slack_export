@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = Dir[File.join("test", "**", "*"), File.join("spec", "**", "*"), File.join("features", "**", "*")]
   spec.require_paths = ["lib"]
 
-  spec.add_runtime_dependency "rest-client", "~> 1.0"
+  spec.add_runtime_dependency "rest-client", "~> 2.0"
   spec.add_runtime_dependency "rubyzip", "~> 1.0"
 
   spec.add_development_dependency "bundler", "~> 1.7"
